@@ -54,3 +54,15 @@ gem 'rails_12factor', group: :production
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Api
+gem 'grape'
+gem 'grape-middleware-logger'
+gem 'hashie-forbidden_attributes'
+gem 'grape-swagger'
+gem 'grape-swagger-rails'
+gem 'grape-entity'
+
+gem 'rack-cors', :require => 'rack/cors'
+
+gem 'figaro'
