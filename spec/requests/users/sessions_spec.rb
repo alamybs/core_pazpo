@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         role:                 1,
         authentication_token: "thisisatokens",
       }
-      post "/sessions",
+      post "/sessions/sign_up",
            params:  params,
            headers: {'Accept-Version' => 'v1'}
 

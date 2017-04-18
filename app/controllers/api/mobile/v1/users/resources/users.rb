@@ -9,7 +9,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       requires :authentication_token, type: String
       requires :role, type: Integer, default: 1, values: [1, 2], desc: '{1: Property Agent, 2: Independent Agen}'
     end
-    post "/" do
+    post "sign_up" do
       user                      = User.new
       user.name                 = params.name
       user.phone_number         = params.phone_number
