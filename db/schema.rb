@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418025234) do
+ActiveRecord::Schema.define(version: 20170418060301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20170418025234) do
     t.string   "authentication_token", null: false
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.string   "account_kit_id"
+    t.index ["account_kit_id"], name: "index_users_on_account_kit_id", unique: true, using: :btree
     t.index ["authentication_token", "email"], name: "index_users_on_authentication_token_and_email", unique: true, using: :btree
   end
 
