@@ -8,17 +8,17 @@ module API
             logger: Logger.new(STDERR)
           }
         end
-        mount API::Mobile::V1::HelloWorlds::Routes
+        # mount API::Mobile::V1::HelloWorlds::Routes
         mount API::Mobile::V1::Users::Routes
 
         # swagger settings
         options = {version: "v1"}
         add_swagger_documentation(
-            api_version:             options[:version],
-            doc_version:             options[:version],
-            hide_documentation_path: true,
-            mount_path:              "documentation/#{options[:version]}/doc",
-            hide_format:             true
+          api_version:             options[:version],
+          doc_version:             options[:version],
+          hide_documentation_path: true,
+          mount_path:              "documentation/#{options[:version]}/doc",
+          hide_format:             true
         )
       end
     end

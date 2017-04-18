@@ -21,5 +21,41 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       end
       present user, with: API::Mobile::V1::Users::Entities::User
     end
+
+    desc "Sign in"
+    params do
+      requires :account_kit_id, type: String
+    end
+    post "/sign_in" do
+      user = User.find_by(account_kit_id: params.account_kit_id)
+      error!("Can't find user by account_kit_id : #{params.account_kit_id}", 401) unless user
+      present user, with: API::Mobile::V1::Users::Entities::User
+    end
+  end
+  resource "users" do
+    desc "Get current user" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    get "/current" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      present @me, with: API::Mobile::V1::Users::Entities::User
+    end
+    desc "Get user" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      requires :id, type: String
+    end
+    get "/" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      user = User.find_by(id: params.id)
+      present user, with: API::Mobile::V1::Users::Entities::UserInfo
+    end
   end
 end

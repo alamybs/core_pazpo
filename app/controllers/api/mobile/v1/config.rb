@@ -37,10 +37,9 @@ module API
             end
 
 
-            def authenticated_hunter
+            def authenticated_user
               if headers['Authorization']
-                #@me = Hunter.find_by(authentication_token: token.strip)
-                @me = nil
+                @me = User.find_by(authentication_token: token.strip)
               else
                 error!("Token not valid!", 422)
               end
