@@ -42,5 +42,34 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       end
       present :property, property, with: API::Mobile::V1::Properties::Entities::Property
     end
+
+    desc "Get current Properties" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    get "current" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      properties = me.properties
+      present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
+    end
+
+    desc "Get Property by id" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      requires :id, type: String
+    end
+    get "" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      property = Propert.find_by(id: params.id)
+      error!("Can't find property by id : #{params.id}", 401) unless property
+      present :property, property, with: API::Mobile::V1::Properties::Entities::Property
+    end
+
   end
 end
