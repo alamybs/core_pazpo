@@ -14,10 +14,10 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       user                           = User.new
       if account_kit.access_user
         user.name           = params.name
-        user.phone_number   = account_kit["phone"]["numbe"]
+        user.phone_number   = account_kit.user["phone"]["number"]
         user.email          = params.email
         user.role           = params.role
-        user.account_kit_id = account_kit["id"]
+        user.account_kit_id = account_kit.user["id"]
         unless user.save
           error!(user.errors.full_messages.join(", "), 422)
         end
@@ -37,7 +37,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       account_kit                    = AccountKit.new
       account_kit.authorization_code = params.authorization_code
       if account_kit.access_user
-        user     = User.find_by(account_kit_id: account_kit["id"])
+        user     = User.find_by(account_kit_id: account_kit.user["id"])
         messages = "Success Create user."
       else
         messages = account_kit.errors
