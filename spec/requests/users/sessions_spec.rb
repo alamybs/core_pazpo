@@ -17,10 +17,10 @@ RSpec.describe "Api::V1::Users", type: :request do
            headers: {'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(201)
-      expect(JSON.parse(response.body)['data']['name']).to eq('Alam')
-      expect(JSON.parse(response.body)['data']['email']).to eq('alam@pazpo.id')
-      expect(JSON.parse(response.body)['data']['role']).to eq('Property Agen')
-      expect(JSON.parse(response.body)['data']['account_kit_id']).to eq('thisisaccountkitid')
+      expect(JSON.parse(response.body)['data']['user']['name']).to eq('Alam')
+      expect(JSON.parse(response.body)['data']['user']['email']).to eq('alam@pazpo.id')
+      expect(JSON.parse(response.body)['data']['user']['role']).to eq('Property Agen')
+      expect(JSON.parse(response.body)['data']['user']['account_kit_id']).to eq('thisisaccountkitid')
     end
   end
   describe "[POST] Endpoint /sessions/sign_in" do
@@ -33,11 +33,11 @@ RSpec.describe "Api::V1::Users", type: :request do
            headers: {'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(201)
-      expect(JSON.parse(response.body)['data']['name']).to eq(@user.name)
-      expect(JSON.parse(response.body)['data']['email']).to eq(@user.email)
-      expect(JSON.parse(response.body)['data']['role']).to eq(@user.role)
-      expect(JSON.parse(response.body)['data']['account_kit_id']).to eq(@user.account_kit_id)
-      expect(JSON.parse(response.body)['data']['authentication_token']).to eq(@user.authentication_token)
+      expect(JSON.parse(response.body)['data']['user']['name']).to eq(@user.name)
+      expect(JSON.parse(response.body)['data']['user']['email']).to eq(@user.email)
+      expect(JSON.parse(response.body)['data']['user']['role']).to eq(@user.role)
+      expect(JSON.parse(response.body)['data']['user']['account_kit_id']).to eq(@user.account_kit_id)
+      expect(JSON.parse(response.body)['data']['user']['authentication_token']).to eq(@user.authentication_token)
     end
   end
 end

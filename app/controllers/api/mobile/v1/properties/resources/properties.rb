@@ -12,11 +12,11 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       categories = []
       Property::property_category_ids.each_key do |key|
         categories << {
-          id: Property::property_category_ids[key],
+          id:    Property::property_category_ids[key],
           title: key
         }
       end
-      present categories, with: API::Mobile::V1::Properties::Entities::PropertyCategory
+      present :property_categories, categories, with: API::Mobile::V1::Properties::Entities::PropertyCategory
     end
   end
   resource "properties" do
@@ -40,7 +40,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       unless property.save
         error!(property.errors.full_messages.join(", "), 422)
       end
-      present property, with: API::Mobile::V1::Properties::Entities::Property
+      present :property, property, with: API::Mobile::V1::Properties::Entities::Property
     end
   end
 end

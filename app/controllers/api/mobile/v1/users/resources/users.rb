@@ -19,7 +19,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       unless user.save
         error!(user.errors.full_messages.join(", "), 422)
       end
-      present user, with: API::Mobile::V1::Users::Entities::User
+      present :user, user, with: API::Mobile::V1::Users::Entities::User
     end
 
     desc "Sign in"
@@ -29,7 +29,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     post "/sign_in" do
       user = User.find_by(account_kit_id: params.account_kit_id)
       error!("Can't find user by account_kit_id : #{params.account_kit_id}", 401) unless user
-      present user, with: API::Mobile::V1::Users::Entities::User
+      present :user, user, with: API::Mobile::V1::Users::Entities::User
     end
   end
   resource "users" do
@@ -41,7 +41,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     end
     get "/current" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      present @me, with: API::Mobile::V1::Users::Entities::User
+      present :user, @me, with: API::Mobile::V1::Users::Entities::User
     end
     desc "Get user" do
       headers "Authorization" => {
@@ -55,7 +55,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     get "/" do
       error!("401 Unauthorized", 401) unless authenticated_user
       user = User.find_by(id: params.id)
-      present user, with: API::Mobile::V1::Users::Entities::UserInfo
+      present :user, user, with: API::Mobile::V1::Users::Entities::UserInfo
     end
   end
 end

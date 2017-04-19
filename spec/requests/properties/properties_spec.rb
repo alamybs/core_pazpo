@@ -17,9 +17,9 @@ RSpec.describe "Api::V1::Properties", type: :request do
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(201)
-      expect(JSON.parse(response.body)['data']['property_category']).to eq({"title"=>"Rumah"})
-      expect(JSON.parse(response.body)['data']['description']).to eq("Jual rumah teletubis.")
-      expect(JSON.parse(response.body)['data']['price']).to eq("2000000000.0")
+      expect(JSON.parse(response.body)['data']['property']['property_category']).to eq({"title"=>"Rumah"})
+      expect(JSON.parse(response.body)['data']['property']['description']).to eq("Jual rumah teletubis.")
+      expect(JSON.parse(response.body)['data']['property']['price']).to eq("2000000000.0")
     end
   end
 end

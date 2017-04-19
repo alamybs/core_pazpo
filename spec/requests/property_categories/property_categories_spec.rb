@@ -11,7 +11,7 @@ RSpec.describe "Api::V1::PropertyCategories", type: :request do
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["data"]).to eq([{"id"=>1, "title"=>"Rumah"}, {"id"=>2, "title"=>"Ruko"}, {"id"=>3, "title"=>"Apartemen"}, {"id"=>4, "title"=>"Gudang"}, {"id"=>5, "title"=>"Kantor"}, {"id"=>6, "title"=>"Tanah"}])
+      expect(JSON.parse(response.body)["data"]).to eq({"property_categories" => [{"id"=>1, "title"=>"Rumah"}, {"id"=>2, "title"=>"Ruko"}, {"id"=>3, "title"=>"Apartemen"}, {"id"=>4, "title"=>"Gudang"}, {"id"=>5, "title"=>"Kantor"}, {"id"=>6, "title"=>"Tanah"}]})
     end
   end
 end
