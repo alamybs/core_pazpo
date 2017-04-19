@@ -30,7 +30,7 @@ class AccountKit
   end
 
   def access_user
-    if :access_token
+    if self.access_token
       params       = {
         access_token: @access_token,
       }
