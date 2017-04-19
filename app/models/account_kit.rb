@@ -31,12 +31,10 @@ class AccountKit
 
   def access_user
     if :access_token
-      params       = {
+      params   = {
         access_token: @access_token,
       }
-      uri          = URI.parse("https://graph.accountkit.com/v1.2/me/?access_token=#{params[:access_token]}")
-      http.use_ssl = true
-
+      uri      = URI.parse("https://graph.accountkit.com/v1.2/me/?access_token=#{params[:access_token]}")
       request  = Net::HTTP::Get.new(uri)
       response = http.request(request)
       if response.code.eql?("200")
@@ -51,15 +49,14 @@ class AccountKit
   end
 
   def access_token
-    params       = {
+    params   = {
       authorization_code: @authorization_code,
       facebook_app_id:    $fb[:facebook_app_id],
       app_secret:         $fb[:facebook_app_secret]
     }
-    uri          = URI.parse("https://graph.accountkit.com/v1.2/access_token?grant_type=authorization_code&code=#{params[:authorization_code]}&access_token=AA|#{params[:facebook_app_id]}|#{params[:app_secret]}")
-    http.use_ssl = true
-    request      = Net::HTTP::Get.new(uri)
-    response     = http.request(request)
+    uri      = URI.parse("https://graph.accountkit.com/v1.2/access_token?grant_type=authorization_code&code=#{params[:authorization_code]}&access_token=AA|#{params[:facebook_app_id]}|#{params[:app_secret]}")
+    request  = Net::HTTP::Get.new(uri)
+    response = http.request(request)
     if response.code.eql?("200")
       @access_token = JSON.parse(response.body)
       @success      = true
