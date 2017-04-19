@@ -1,5 +1,24 @@
 class API::Mobile::V1::Properties::Resources::Properties < Grape::API
   include API::Mobile::V1::Config
+  resource "property_categories" do
+    desc "Get Property" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    get "" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      categories = []
+      Property::property_category_ids.each_key do |key|
+        categories << {
+          id: Property::property_category_ids[key],
+          title: key
+        }
+      end
+      present categories, with: API::Mobile::V1::Properties::Entities::PropertyCategory
+    end
+  end
   resource "properties" do
     desc "Create Property" do
       headers "Authorization" => {
