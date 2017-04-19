@@ -3,7 +3,7 @@ class AccountKit
 
   def initialize(args = {})
     @authorization_code = ""
-    @access_token       = {}
+    @access_token       = ""
     @success            = nil
     @users              = {}
     @errors             = []
@@ -62,7 +62,7 @@ class AccountKit
     request      = Net::HTTP::Get.new(uri)
     response     = http.request(request)
     if response.code.eql?("200")
-      @access_token = JSON.parse(response.body)
+      @access_token = JSON.parse(response.body)["access_token"]
       @success      = true
     else
       @success = false
