@@ -6,7 +6,6 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       requires :name, type: String
       requires :email, allow_blank: false, regexp: /.+@.+/
       requires :authorization_code, type: String
-      requires :account_kit_id, type: String
       requires :role, type: Integer, default: 1, values: [1, 2], desc: '{1: Property Agent, 2: Independent Agen}'
     end
     post "sign_up" do
