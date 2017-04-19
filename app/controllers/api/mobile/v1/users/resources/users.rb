@@ -5,30 +5,46 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     params do
       requires :name, type: String
       requires :email, allow_blank: false, regexp: /.+@.+/
-      requires :phone_number, type: String
+      requires :authorization_code, type: String
       requires :account_kit_id, type: String
       requires :role, type: Integer, default: 1, values: [1, 2], desc: '{1: Property Agent, 2: Independent Agen}'
     end
     post "sign_up" do
-      user                = User.new
-      user.name           = params.name
-      user.phone_number   = params.phone_number
-      user.email          = params.email
-      user.role           = params.role
-      user.account_kit_id = params.account_kit_id
-      unless user.save
-        error!(user.errors.full_messages.join(", "), 422)
+      account_kit                    = AccountKit.new
+      account_kit.authorization_code = params.authorization_code
+      user                           = User.new
+      if account_kit.access_user
+        user.name           = params.name
+        user.phone_number   = account_kit["phone"]["numbe"]
+        user.email          = params.email
+        user.role           = params.role
+        user.account_kit_id = account_kit["id"]
+        unless user.save
+          error!(user.errors.full_messages.join(", "), 422)
+        end
+        messages = "Success Create user."
+      else
+        messages = account_kit.errors
       end
+      present :messages, messages, type: :json
       present :user, user, with: API::Mobile::V1::Users::Entities::User
     end
 
     desc "Sign in"
     params do
-      requires :account_kit_id, type: String
+      requires :authorization_code, type: String
     end
     post "/sign_in" do
-      user = User.find_by(account_kit_id: params.account_kit_id)
-      error!("Can't find user by account_kit_id : #{params.account_kit_id}", 401) unless user
+      account_kit                    = AccountKit.new
+      account_kit.authorization_code = params.authorization_code
+      if account_kit.access_user
+        user     = User.find_by(account_kit_id: account_kit["id"])
+        messages = "Success Create user."
+      else
+        messages = account_kit.errors
+        error!(account_kit.errors, 401) unless user
+      end
+      present :messages, messages, type: :json
       present :user, user, with: API::Mobile::V1::Users::Entities::User
     end
   end
