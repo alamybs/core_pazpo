@@ -3,5 +3,6 @@ class API::Mobile::V1::Properties::Entities::Property < Grape::Entity
   expose :property_category
   expose :price
   expose :description
+  expose :property_type
 end
 
