@@ -2,8 +2,8 @@ class AccountKit
   require 'net/http'
 
   def initialize(args = {})
-    @authorization_code = ""
-    @access_token       = ""
+    @authorization_code = args[:authorization_code] || args["authorization_code"] || ""
+    @access_token       = nil
     @success            = nil
     @users              = {}
     @errors             = []

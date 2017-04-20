@@ -41,6 +41,8 @@ group :development, :test do
   # bundle exec guard init rspec
   ###
   gem 'guard-rspec', require: false
+
+  gem 'webmock'
 end
 
 group :development do
