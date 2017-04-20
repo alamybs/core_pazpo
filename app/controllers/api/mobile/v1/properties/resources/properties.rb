@@ -28,7 +28,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     end
     params do
       requires :price, type: String
-      requires :description, type: Text
+      requires :description, type: String
       requires :property_category_id, type: Integer, default: 1, values: [1, 2, 3, 4, 5, 6], desc: '{ Rumah: 1, Ruko: 2, Apartemen: 3, Gudang:4, Kantor: 5, Tanah: 6}'
       requires :property_type, type: Integer, default: 1, values: [1, 2], desc: '{ WTB: 1, WTS: 2}'
     end
