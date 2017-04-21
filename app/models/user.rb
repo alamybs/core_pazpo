@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :properties
-
+  validates_uniqueness_of :account_kit_id
   validates :name, :email, :phone_number, presence: true
   validates :account_kit_id, presence: true, on: :create
 
