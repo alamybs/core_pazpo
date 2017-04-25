@@ -68,3 +68,8 @@ gem 'grape-entity'
 gem 'rack-cors', :require => 'rack/cors'
 
 gem 'figaro'
+
+# upload images
+gem 'mini_magick'
+gem 'fog', require: 'fog/aws'
+gem 'carrierwave'

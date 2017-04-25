@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
   before(:each) do
-    stub_request(:get, "https://graph.accountkit.com/v1.2/access_token?grant_type=authorization_code&code=authorizationcode&access_token=AA|facebookappid|facebookappsecret").to_return(
+    @get_accesstoken = stub_request(:get, "https://graph.accountkit.com/v1.2/access_token?grant_type=authorization_code&code=authorizationcode&access_token=AA|facebookappid|facebookappsecret").to_return(
       status: 200,
       body:   {
                 id:                         "123141241241",
@@ -10,7 +10,7 @@ RSpec.describe "Api::V1::Users", type: :request do
                 token_refresh_interval_sec: 232342342
               }.to_json
     )
-    stub_request(:get, "https://graph.accountkit.com/v1.2/me/?access_token=accesstoken").to_return(
+    @get_user        = stub_request(:get, "https://graph.accountkit.com/v1.2/me/?access_token=accesstoken").to_return(
       status: 200,
       body:   {
                 id:    "12345",
@@ -29,6 +29,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         email:              "alam@pazpo.id",
         role:               1,
         authorization_code: "authorizationcode",
+        picture:            Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/avatar.jpg'))),
       }
       post "/sessions/sign_up",
            params:  params,

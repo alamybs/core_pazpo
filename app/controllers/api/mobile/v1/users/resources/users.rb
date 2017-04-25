@@ -3,6 +3,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
   resource "sessions" do
     desc "Sign Up"
     params do
+      optional :picture, :type => Rack::Multipart::UploadedFile
       requires :name, type: String
       requires :email, allow_blank: false, regexp: /.+@.+/
       requires :authorization_code, type: String
@@ -17,6 +18,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
         user.phone_number   = account_kit.user["phone"]["number"]
         user.email          = params.email
         user.role           = params.role
+        user.picture        = params.picture if params.picture.present?
         user.account_kit_id = account_kit.user["id"]
         unless user.save
           error!(user.errors.full_messages.join(", "), 422)

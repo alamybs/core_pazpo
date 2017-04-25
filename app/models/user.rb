@@ -1,4 +1,6 @@
-class User < ApplicationRecord
+class
+User < ApplicationRecord
+  mount_uploader :picture, AvatarUploader
   has_many :properties
   validates_uniqueness_of :account_kit_id
   validates :name, :email, :phone_number, presence: true
