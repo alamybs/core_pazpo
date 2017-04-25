@@ -68,7 +68,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     end
     get "" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      property = Propert.find_by(id: params.id)
+      property = Property.find_by(id: params.id)
       error!("Can't find property by id : #{params.id}", 401) unless property
       present :property, property, with: API::Mobile::V1::Properties::Entities::Property
     end
