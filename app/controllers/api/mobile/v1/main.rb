@@ -11,6 +11,7 @@ module API
         # mount API::Mobile::V1::HelloWorlds::Routes
         mount API::Mobile::V1::Users::Routes
         mount API::Mobile::V1::Properties::Routes
+        mount API::Mobile::V1::Networks::Routes
 
         # swagger settings
         options = {version: "v1"}
