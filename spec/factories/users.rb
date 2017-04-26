@@ -15,6 +15,14 @@ FactoryGirl.define do
     account_kit_id "678910"
     picture File.open(File.join(Rails.root, '/spec/fixtures/avatar.jpg'))
   end
+  factory :user_3, class: User do
+    name "Jonggrang"
+    email "jonggrang@pazpo.id"
+    phone_number "+6278945631231"
+    role 1
+    account_kit_id "4233221"
+    picture File.open(File.join(Rails.root, '/spec/fixtures/avatar.jpg'))
+  end
   factory :user_4, class: User do
     name "Rara"
     email "rara@pazpo.id"
