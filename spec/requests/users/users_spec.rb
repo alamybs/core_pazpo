@@ -23,7 +23,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       @user = FactoryGirl.create(:user)
     end
     it "should returns 200 with valid params" do
-      get "/users",
+      get "/users/show",
           params:  {id: @user.id},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}

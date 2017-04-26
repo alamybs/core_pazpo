@@ -69,7 +69,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     params do
       requires :id, type: String
     end
-    get "/" do
+    get "/show" do
       error!("401 Unauthorized", 401) unless authenticated_user
       user = User.find_by(id: params.id)
       error!("Can't find user by id : #{params.id}", 401) unless user

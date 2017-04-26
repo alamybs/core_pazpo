@@ -93,7 +93,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     params do
       requires :id, type: String
     end
-    get "/:id" do
+    get "/show" do
       error!("401 Unauthorized", 401) unless authenticated_user
       property = Property.find_by(id: params.id)
       error!("Can't find property by id : #{params.id}", 401) unless property

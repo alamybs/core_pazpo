@@ -64,7 +64,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
     end
   end
-  describe "[GET] Endpoint /properties/{id}" do
+  describe "[GET] Endpoint /properties/show" do
     before :each do
       @user       = FactoryGirl.create(:user)
       @user_2     = FactoryGirl.create(:user_2)
@@ -72,7 +72,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       @property_2 = FactoryGirl.create(:property, user_id: @user_2.id, description: "Dicari Rumah mahal.", property_type: 2)
     end
     it "should returns 200 with valid params when succes get property by id" do
-      get "/properties/#{@property_2.id}",
+      get "/properties/show",
           params:  {id: @property_2.id},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}
