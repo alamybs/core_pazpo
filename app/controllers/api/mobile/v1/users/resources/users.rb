@@ -75,5 +75,22 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       error!("Can't find user by id : #{params.id}", 401) unless user
       present :user, user, with: API::Mobile::V1::Users::Entities::UserInfo
     end
+
+    desc "Update users"
+    params do
+      optional :picture, :type => Rack::Multipart::UploadedFile
+      requires :name, type: String
+      requires :email, allow_blank: false, regexp: /.+@.+/
+    end
+    put "" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      me.name           = params.name
+      me.email          = params.email
+      me.picture        = params.picture if params.picture.present?
+      unless me.save
+        error!(me.errors.full_messages.join(", "), 422)
+      end
+      present :user, me, with: API::Mobile::V1::Users::Entities::User
+    end
   end
 end
