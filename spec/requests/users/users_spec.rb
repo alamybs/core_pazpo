@@ -40,7 +40,7 @@ RSpec.describe "Api::V1::Users", type: :request do
     before :each do
       @user = FactoryGirl.create(:user)
     end
-    it "should returns 200 with valid params" do
+    it "should returns 200 with valid params success update user" do
       params = {
         name:               "Jono",
         email:              "jono@pazpo.id",
