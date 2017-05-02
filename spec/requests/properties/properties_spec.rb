@@ -7,10 +7,10 @@ RSpec.describe "Api::V1::Properties", type: :request do
     end
     it "should returns 200 with valid params when succes creat property" do
       params = {
-        description:          "Jual rumah teletubis.",
-        price:                "2.000.000.000",
-        property_type:        1,
-        property_category_id: 1
+        description:   "Jual rumah teletubis.",
+        price:         "2.000.000.000",
+        property_type: 2,
+        hastags:       ["satu", "dua"]
       }
       post "/properties",
            params:  params,
@@ -18,10 +18,9 @@ RSpec.describe "Api::V1::Properties", type: :request do
                      'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(201)
-      expect(JSON.parse(response.body)['data']['property']['property_category']).to eq({"title" => "Rumah"})
       expect(JSON.parse(response.body)['data']['property']['description']).to eq("Jual rumah teletubis.")
       expect(JSON.parse(response.body)['data']['property']['price']).to eq("2000000000.0")
-      expect(JSON.parse(response.body)['data']['property']['property_type']).to eq("WTB")
+      expect(JSON.parse(response.body)['data']['property']['hastags']).to eq(["satu", "dua"])
     end
   end
   describe "[PUT] Endpoint /properties" do
@@ -31,11 +30,11 @@ RSpec.describe "Api::V1::Properties", type: :request do
     end
     it "should returns 200 with valid params when succes update property" do
       params = {
-        id:                   @property.id,
-        description:          "Jual rumah Dora.",
-        price:                "1.000.000.000",
-        property_type:        2,
-        property_category_id: 1
+        id:            @property.id,
+        description:   "Jual rumah Dora.",
+        price:         "1.000.000.000",
+        property_type: 1,
+        hastags:       ["satu", "tiga"]
       }
       put "/properties",
           params:  params,
@@ -43,10 +42,9 @@ RSpec.describe "Api::V1::Properties", type: :request do
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['property']['property_category']).to eq({"title" => "Rumah"})
       expect(JSON.parse(response.body)['data']['property']['description']).to eq("Jual rumah Dora.")
       expect(JSON.parse(response.body)['data']['property']['price']).to eq("1000000000.0")
-      expect(JSON.parse(response.body)['data']['property']['property_type']).to eq("WTS")
+      expect(JSON.parse(response.body)['data']['property']['hastags']).to eq(["satu", "tiga"])
     end
   end
   describe "[GET] Endpoint /properties/current" do
@@ -69,7 +67,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       @user       = FactoryGirl.create(:user)
       @user_2     = FactoryGirl.create(:user_2)
       @property   = FactoryGirl.create(:property, user_id: @user.id)
-      @property_2 = FactoryGirl.create(:property, user_id: @user_2.id, description: "Dicari Rumah mahal.", property_type: 2)
+      @property_2 = FactoryGirl.create(:property, user_id: @user_2.id, description: "Dicari Rumah mahal.")
     end
     it "should returns 200 with valid params when succes get property by id" do
       get "/properties/show",
@@ -85,7 +83,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
     before :each do
       @user       = FactoryGirl.create(:user)
       @property   = FactoryGirl.create(:property, user_id: @user.id)
-      @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: "Dicari Rumah mahal.", property_type: 2)
+      @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: "Dicari Rumah mahal.")
     end
     it "should returns 200 with valid params when succes destroy current property" do
       delete "/properties",
@@ -99,15 +97,17 @@ RSpec.describe "Api::V1::Properties", type: :request do
   end
   describe "[GET] Endpoint /properties" do
     before :each do
-      @user       = FactoryGirl.create(:user)
-      @user_2     = FactoryGirl.create(:user_2)
-      @user_3     = FactoryGirl.create(:user_3)
-      @follow     = FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
-      @property   = FactoryGirl.create(:property, user_id: @user.id, property_category_id: 2, property_type: 1, created_at: Time.now - 5.minutes)
-      @property_2 = FactoryGirl.create(:property, user_id: @user.id, property_category_id: 3, property_type: 2, created_at: Time.now - 4.minutes)
-      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, property_category_id: 3, property_type: 1, created_at: Time.now - 3.minutes)
-      @property_4 = FactoryGirl.create(:property, user_id: @user_2.id, property_category_id: 2, property_type: 2, created_at: Time.now - 2.minutes)
-      @property_5 = FactoryGirl.create(:property, user_id: @user_3.id, property_category_id: 2, property_type: 1, created_at: Time.now - 1.minutes)
+      @user   = FactoryGirl.create(:user)
+      @user_2 = FactoryGirl.create(:user_2)
+      @user_3 = FactoryGirl.create(:user_3)
+
+      @follow = FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
+
+      @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes)
+      @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 4.minutes)
+      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 3', created_at: Time.now - 3.minutes)
+      @property_4 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 4', created_at: Time.now - 2.minutes)
+      @property_5 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 5', created_at: Time.now - 1.minutes)
     end
     it "should returns 200 with valid params when succes get all property (5)" do
       get "/properties",
@@ -118,9 +118,9 @@ RSpec.describe "Api::V1::Properties", type: :request do
       expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
     end
 
-    it "should returns 200 with valid params when succes get filter property type 1 (3)" do
+    it "should returns 200 with valid params when succes get filter user name (3)" do
       get "/properties",
-          params:  {property_type: 1},
+          params:  {q: "Bima"},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}
 
@@ -128,62 +128,23 @@ RSpec.describe "Api::V1::Properties", type: :request do
       expect(JSON.parse(response.body)['data']['properties'].size).to eq(3)
     end
 
-    it "should returns 200 with valid params when succes get filter property type 2 (2)" do
+    it "should returns 200 with valid params when succes get filter description (5)" do
       get "/properties",
-          params:  {property_type: 2},
+          params:  {q: "Description"},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
+      expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
     end
-
-    it "should returns 200 with valid params when succes get filter property_category 2 (3)" do
+    it "should returns 200 with valid params when succes get filter price (5)" do
       get "/properties",
-          params:  {property_category: 2},
+          params:  {q: 5},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(3)
-    end
-    it "should returns 200 with valid params when succes get filter property_category 3 (2)" do
-      get "/properties",
-          params:  {property_category: 3},
-          headers: {'Authorization'  => @user.authentication_token,
-                    'Accept-Version' => 'v1'}
-
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
-    end
-
-    it "should returns 200 with valid params when succes get filter property_category 2, property_type 1  (2)" do
-      get "/properties",
-          params:  {property_category: 2, property_type: 1},
-          headers: {'Authorization'  => @user.authentication_token,
-                    'Accept-Version' => 'v1'}
-
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
-    end
-    it "should returns 200 with valid params when succes get filter property_category 2, property_type 2  (1)" do
-      get "/properties",
-          params:  {property_category: 2, property_type: 1},
-          headers: {'Authorization'  => @user.authentication_token,
-                    'Accept-Version' => 'v1'}
-
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
-    end
-
-    it "should returns 200 with valid params when succes get filter on_networks true  (2)" do
-      get "/properties",
-          params:  {on_networks: true},
-          headers: {'Authorization'  => @user.authentication_token,
-                    'Accept-Version' => 'v1'}
-
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(2)
+      expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
     end
 
     it "should returns 200 with valid params when succes get filter sort_by_published ASC first < last " do

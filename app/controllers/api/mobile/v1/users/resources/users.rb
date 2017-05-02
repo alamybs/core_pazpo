@@ -78,7 +78,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
 
     desc "Update users"
     params do
-      optional :picture, :type => Rack::Multipart::UploadedFile
+      optional :picture, type: File
       requires :name, type: String
       requires :email, allow_blank: false, regexp: /.+@.+/
     end

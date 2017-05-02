@@ -1,12 +1,9 @@
 class Property < ApplicationRecord
+  acts_as_taggable
   belongs_to :user
-  validates :description, :price, :property_category_id, :property_type, presence: true
-  enum property_category_id: {'Rumah': 1, 'Ruko': 2, 'Apartemen': 3, 'Gudang': 4, 'Kantor': 5, 'Tanah': 6}
-  enum property_type: {'WTB': 1, 'WTS': 2}
+  validates :description, :price, :property_type, presence: true
 
-  def property_category
-    {title: property_category_id}
-  end
+  enum property_type: {'#dijual': 1, '#dicari': 2}
 
   def self.reformat_price(price)
     price.gsub(/\D/, '')

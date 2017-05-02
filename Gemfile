@@ -74,5 +74,5 @@ gem 'mini_magick'
 gem 'fog', require: 'fog/aws'
 gem 'carrierwave'
 
-# friends
-gem 'acts_as_follower', github: 'tcocca/acts_as_follower', branch: 'master'
+# tags
+gem 'acts-as-taggable-on', '~> 4.0'
