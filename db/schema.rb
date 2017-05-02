@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170428070119) do
+ActiveRecord::Schema.define(version: 20170502092444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 20170428070119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "follow_id"], name: "index_follows_on_user_id_and_follow_id", unique: true, using: :btree
+  end
+
+  create_table "private_chats", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "user_id",    null: false
+    t.string   "group_ch",   null: false
+    t.string   "member_ch",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_ch"], name: "index_private_chats_on_group_ch", unique: true, using: :btree
+    t.index ["user_id", "member_ch"], name: "index_private_chats_on_user_id_and_member_ch", unique: true, using: :btree
   end
 
   create_table "properties", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -68,8 +78,10 @@ ActiveRecord::Schema.define(version: 20170428070119) do
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
     t.string   "account_kit_id"
+    t.string   "channel"
     t.index ["account_kit_id"], name: "index_users_on_account_kit_id", unique: true, using: :btree
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+    t.index ["channel"], name: "index_users_on_channel", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 

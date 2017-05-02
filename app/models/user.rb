@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   mount_uploader :picture, AvatarUploader
   has_many :properties
+  has_many :private_chats
 
   has_many :follows
   has_many :get_users, :class_name => 'Follow', :foreign_key => 'user_id'
@@ -10,6 +11,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :account_kit_id
   validates :name, :email, :phone_number, presence: true
   validates :account_kit_id, presence: true, on: :create
+  before_create :set_channel
 
   enum role: {'Property Agen': 1, 'Independent Agent': 2}
 
@@ -20,5 +22,16 @@ class User < ApplicationRecord
   end
   def followings
     User.where(id: get_users.pluck(:follow_id))
+  end
+
+  private
+  def set_channel
+    self.channel  = generate_channel
+  end
+  def generate_channel
+    loop do
+      ch = "user_#{SecureRandom.hex(10).downcase}"
+      break ch unless User.where(channel: ch).exists?
+    end
   end
 end

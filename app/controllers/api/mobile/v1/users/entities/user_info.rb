@@ -4,6 +4,7 @@ class API::Mobile::V1::Users::Entities::UserInfo < Grape::Entity
   expose :email
   expose :picture
   expose :phone_number
+  expose :channel
   expose :role
 end
 

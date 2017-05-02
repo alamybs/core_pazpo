@@ -13,6 +13,7 @@ module API
         mount API::Mobile::V1::Properties::Routes
         mount API::Mobile::V1::Networks::Routes
         mount API::Mobile::V1::Hastags::Routes
+        mount API::Mobile::V1::PrivateChats::Routes
 
         # swagger settings
         options = {version: "v1"}
