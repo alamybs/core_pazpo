@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   mount_uploader :picture, AvatarUploader
   has_many :properties
-  has_many :private_chats
 
   has_many :follows
   has_many :get_users, :class_name => 'Follow', :foreign_key => 'user_id'
@@ -30,7 +29,7 @@ class User < ApplicationRecord
   end
   def generate_channel
     loop do
-      ch = "user_#{SecureRandom.hex(10).downcase}"
+      ch = "u_#{SecureRandom.hex(10).downcase}"
       break ch unless User.where(channel: ch).exists?
     end
   end

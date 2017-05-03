@@ -10,11 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502092444) do
+ActiveRecord::Schema.define(version: 20170503022700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "chats", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "channel",    null: false
+    t.integer  "chat_type",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "follows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "user_id",    null: false
@@ -24,14 +31,12 @@ ActiveRecord::Schema.define(version: 20170502092444) do
     t.index ["user_id", "follow_id"], name: "index_follows_on_user_id_and_follow_id", unique: true, using: :btree
   end
 
-  create_table "private_chats", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+  create_table "member_chats", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "user_id",    null: false
-    t.string   "group_ch",   null: false
-    t.string   "member_ch",  null: false
+    t.uuid     "chat_id",    null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["group_ch"], name: "index_private_chats_on_group_ch", unique: true, using: :btree
-    t.index ["user_id", "member_ch"], name: "index_private_chats_on_user_id_and_member_ch", unique: true, using: :btree
+    t.index ["user_id", "chat_id"], name: "index_member_chats_on_user_id_and_chat_id", unique: true, using: :btree
   end
 
   create_table "properties", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

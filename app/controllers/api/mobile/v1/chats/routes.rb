@@ -1,9 +1,9 @@
 module API
   module Mobile
     module V1
-      module PrivateChats
+      module Chats
         class Routes < Grape::API
-          mount API::Mobile::V1::PrivateChats::Resources::PrivateChats
+          mount API::Mobile::V1::Chats::Resources::Chats
         end
       end
     end
