@@ -11,15 +11,20 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       requires :description, type: String
       requires :price, type: String
       requires :property_type, type: Integer, desc: "1 #dijual, 2 #dicari"
-      requires :hastags, type: Array[String], desc: "[satu, dua]"
+      requires :hastags, type: Array[String], desc: "['satu', 'dua']"
     end
     post "" do
       error!("401 Unauthorized", 401) unless authenticated_user
       property               = me.properties.new
       property.description   = params.description
       property.property_type = params.property_type
-      property.tag_list      = params.hastags.join(", ") if params.hastags.present?
-      property.price         = Property.reformat_price(params.price)
+
+      tags                   = HastagService.new(params.hastags)
+      tags.to_string
+      tags.extract
+
+      property.tag_list = tags.results if (params.hastags.present? && tags.results.present?)
+      property.price    = Property.reformat_price(params.price)
       unless property.save
         error!(property.errors.full_messages.join(", "), 422)
       end
@@ -45,7 +50,12 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       error!("Can't find property by id : #{params.id}", 401) unless property
       property.description   = params.description
       property.property_type = params.property_type
-      property.tag_list      = params.hastags.join(", ") if params.hastags.present?
+
+      tags                   = HastagService.new(params.hastags)
+      tags.to_string
+      tags.extract
+
+      property.tag_list      = tags.results if (params.hastags.present? && tags.results.present?)
       property.price         = Property.reformat_price(params.price)
       unless property.save
         error!(property.errors.full_messages.join(", "), 422)
@@ -120,6 +130,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       properties = Property.all
       if params.q.present?
         tags = HastagService.new(params.q)
+        tags.to_string
         tags.extract # extract tags from text ["#satu", "#dua"]
         if tags.results.present?
           properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any(tags.results).pluck(:id)).distinct(:taggable_id)
