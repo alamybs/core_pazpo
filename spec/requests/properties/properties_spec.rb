@@ -67,7 +67,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       @user       = FactoryGirl.create(:user)
       @user_2     = FactoryGirl.create(:user_2)
       @property   = FactoryGirl.create(:property, user_id: @user.id)
-      @property_2 = FactoryGirl.create(:property, user_id: @user_2.id, description: "Dicari Rumah mahal.")
+      @property_2 = FactoryGirl.create(:property, user_id: @user_2.id, description: "Dicari Rumah mahal.", tag_list: "satu,dua,tiga")
     end
     it "should returns 200 with valid params when succes get property by id" do
       get "/properties/show",
@@ -103,11 +103,11 @@ RSpec.describe "Api::V1::Properties", type: :request do
 
       @follow = FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
 
-      @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes)
-      @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 4.minutes)
-      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 3', created_at: Time.now - 3.minutes)
-      @property_4 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 4', created_at: Time.now - 2.minutes)
-      @property_5 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 5', created_at: Time.now - 1.minutes)
+      @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes, tag_list: "satu,dua,tiga")
+      @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 4.minutes, tag_list: "satu,dua,tiga")
+      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 3', created_at: Time.now - 3.minutes, tag_list: "satu,dua,tiga")
+      @property_4 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 4', created_at: Time.now - 2.minutes, tag_list: "satu,dua,tiga")
+      @property_5 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 5', created_at: Time.now - 1.minutes, tag_list: "satu,dua,tiga")
     end
     it "should returns 200 with valid params when succes get all property (5)" do
       get "/properties",
