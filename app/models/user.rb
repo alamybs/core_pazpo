@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   mount_uploader :picture, AvatarUploader
   has_many :properties
+  has_many :member_chats
+  has_many :chats, through: :member_chats
 
   has_many :follows
   has_many :get_users, :class_name => 'Follow', :foreign_key => 'user_id'
@@ -19,14 +21,16 @@ class User < ApplicationRecord
   def followers
     User.where(id: get_follows.where(follow_id: id).pluck(:user_id))
   end
+
   def followings
     User.where(id: get_users.pluck(:follow_id))
   end
 
   private
   def set_channel
-    self.channel  = generate_channel
+    self.channel = generate_channel
   end
+
   def generate_channel
     loop do
       ch = "u_#{SecureRandom.hex(10).downcase}"

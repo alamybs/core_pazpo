@@ -1,5 +1,6 @@
 class Chat < ApplicationRecord
   has_many :member_chats, dependent: :destroy
+  has_many :users, through: :member_chats
   validates :chat_type, presence: true
 
   enum chat_type: {'private_chat': 1, 'group_chat': 2}

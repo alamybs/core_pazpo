@@ -1,29 +1,26 @@
 class API::Mobile::V1::Chats::Resources::Chats < Grape::API
   include API::Mobile::V1::Config
   resource "chats" do
-    desc "Request channel" do
+    desc "Request private channel" do
       headers "Authorization" => {
         description: "Token User",
         required:    true
       }
     end
     params do
-      requires :channels, type: Array[String]
-      requires :chat_type, type: Integer
+      requires :channel, type: String, desc: "user channel target"
     end
-    get "channel" do
+    post "private" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      if params.chat_type.eql?(1) && params.channels.size != 2
-        error!("Not valid member for private chat", 422)
-      end
       chat           = Chat.new
-      chat.chat_type = params.chat_type
+      chat.chat_type = 1
+      channels       = [me.channel]
+      channels<< params.channel
       if chat.save
         errors = []
-        params.channels.each do |c|
+        channels.each do |c|
           member      = chat.member_chats.new
           member.user = User.find_by(channel: c)
-
           errors << member.errors.full_messages.join(", ") unless member.save
         end
         if Chat.chat_types[chat.chat_type].eql?(1)
@@ -35,8 +32,18 @@ class API::Mobile::V1::Chats::Resources::Chats < Grape::API
       else
         error!(chat.errors.full_messages.to_sentence, 422)
       end
-
       present :chat, chat, with: API::Mobile::V1::Chats::Entities::Chat
+    end
+    desc "Request get chat list" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    get "" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      chats = me.chats
+      present :chats, chats, with: API::Mobile::V1::Chats::Entities::Chat
     end
   end
 end
