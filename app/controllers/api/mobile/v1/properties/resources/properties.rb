@@ -19,7 +19,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       property.description   = params.description
       property.property_type = params.property_type
 
-      tags                   = HastagService.new(params.hastags)
+      tags = HastagService.new(params.hastags)
       tags.to_string
       tags.extract
 
@@ -51,12 +51,12 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       property.description   = params.description
       property.property_type = params.property_type
 
-      tags                   = HastagService.new(params.hastags)
+      tags = HastagService.new(params.hastags)
       tags.to_string
       tags.extract
 
-      property.tag_list      = tags.results if (params.hastags.present? && tags.results.present?)
-      property.price         = Property.reformat_price(params.price)
+      property.tag_list = tags.results if (params.hastags.present? && tags.results.present?)
+      property.price    = Property.reformat_price(params.price)
       unless property.save
         error!(property.errors.full_messages.join(", "), 422)
       end
@@ -72,6 +72,23 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     get "current" do
       error!("401 Unauthorized", 401) unless authenticated_user
       properties = me.properties
+      present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
+    end
+
+    desc "Get Properties by user_id" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      requires :user_id, type: String
+    end
+    get ":user_id/user" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      user = User.find_by(id: params.user_id)
+      error!("Can't find user by id : #{params.user_id}", 401) unless user
+      properties = user.properties
       present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
     end
 
@@ -148,21 +165,6 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       end
       present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
     end
-    # desc "Get List Properties by tag" do
-    #   headers "Authorization" => {
-    #     description: "Token User",
-    #     required:    true
-    #   }
-    # end
-    # params do
-    #   requires :hastag, type: String
-    # end
-    # get "/tag/:hastag" do
-    #   error!("401 Unauthorized", 401) unless authenticated_user
-    #   properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any([params.hastag]).pluck(:id)).distinct(:taggable_id)
-    #
-    #   present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
-    # end
 
   end
 end
