@@ -114,6 +114,40 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       {messages: messages}
     end
 
+    desc "Get List Properties" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      optional :sort_by_published, type: String, values: ["ASC", "DESC"], desc: '{ baru -> lama: DESC, lama -> baru: ASC}'
+      optional :sort_by_price, type: String, values: ["ASC", "DESC"], desc: '{ mahal -> murah: DESC, murah -> mahal: ASC}'
+      optional :q, type: String, desc: 'user name, property description or property price or #jogja #pazpo'
+    end
+    get "" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      properties = Property.all
+      if params.q.present?
+        tags = HastagService.new(params.q)
+        tags.to_string
+        tags.extract # extract tags from text ["#satu", "#dua"]
+        if tags.results.present?
+          properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any(tags.results).pluck(:id)).distinct(:taggable_id)
+        else
+          query      = "%#{params.q}%"
+          properties = properties.includes(:user).where("(users.name LIKE ? )  OR (description LIKE ?) OR (CAST ( price AS varchar ) LIKE ?)", query, query, query).references(:users)
+        end
+      end
+      if params.sort_by_published.present?
+        properties = properties.reorder("created_at #{params.sort_by_published}")
+      end
+
+      if params.sort_by_price.present?
+        properties = properties.reorder("price #{params.sort_by_price}")
+      end
+      present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
+    end
     # desc "Get List Properties by tag" do
     #   headers "Authorization" => {
     #     description: "Token User",
