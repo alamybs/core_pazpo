@@ -54,9 +54,14 @@ class API::Mobile::V1::Networks::Resources::Networks < Grape::API
         required:    true
       }
     end
+    params do
+      requires :user_id, type: String
+    end
     get "followers" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      followers = me.followers
+      user = User.find_by(id: params.user_id)
+      error!("Can't find user with id : #{ params.user_id}", 401) unless user
+      followers = user.followers
       present :users, followers, with: API::Mobile::V1::Users::Entities::UserInfo
     end
 
@@ -66,9 +71,14 @@ class API::Mobile::V1::Networks::Resources::Networks < Grape::API
         required:    true
       }
     end
+    params do
+      requires :user_id, type: String
+    end
     get "followings" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      followings = me.followings
+      user = User.find_by(id: params.user_id)
+      error!("Can't find user with id : #{ params.user_id}", 401) unless user
+      followings = user.followings
       present :users, followings, with: API::Mobile::V1::Users::Entities::UserInfo
     end
   end

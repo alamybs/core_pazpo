@@ -26,6 +26,13 @@ class User < ApplicationRecord
     User.where(id: get_users.pluck(:follow_id))
   end
 
+  def info
+    {
+      followers:  followers.size,
+      followings: followings.size,
+    }
+  end
+
   private
   def set_channel
     self.channel = generate_channel
