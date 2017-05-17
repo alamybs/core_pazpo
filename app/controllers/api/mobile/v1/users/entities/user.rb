@@ -8,5 +8,6 @@ class API::Mobile::V1::Users::Entities::User < Grape::Entity
   expose :picture
   expose :account_kit_id
   expose :authentication_token
+  expose :info
 end
 

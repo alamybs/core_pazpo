@@ -28,8 +28,10 @@ class User < ApplicationRecord
 
   def info
     {
-      followers:  followers.size,
-      followings: followings.size,
+      total:{
+        followers:  followers.size,
+        followings: followings.size,
+      }
     }
   end
 

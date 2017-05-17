@@ -4,4 +4,5 @@ class API::Mobile::V1::Users::Entities::UserProperty < Grape::Entity
   expose :picture
   expose :channel
   expose :role
+  expose :info
 end
