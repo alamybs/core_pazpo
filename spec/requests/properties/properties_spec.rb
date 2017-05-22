@@ -103,11 +103,11 @@ RSpec.describe "Api::V1::Properties", type: :request do
 
       @follow = FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
 
-      @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes, tag_list: "satu,dua,tiga")
+      @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes, tag_list: "satu,dua,tiga,lima")
       @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 4.minutes, tag_list: "satu,dua,tiga")
-      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 3', created_at: Time.now - 3.minutes, tag_list: "satu,dua,tiga")
+      @property_3 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 3', created_at: Time.now - 3.minutes, tag_list: "satu,dua,tiga,lima")
       @property_4 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 4', created_at: Time.now - 2.minutes, tag_list: "satu,dua,tiga")
-      @property_5 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 5', created_at: Time.now - 1.minutes, tag_list: "satu,dua,tiga")
+      @property_5 = FactoryGirl.create(:property, user_id: @user_2.id, description: 'Description 5', created_at: Time.now - 1.minutes, tag_list: "satu,dua,tiga,lima")
     end
     it "should returns 200 with valid params when succes get all property (5)" do
       get "/properties",
@@ -145,6 +145,15 @@ RSpec.describe "Api::V1::Properties", type: :request do
 
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
+    end
+    it "should returns 200 with valid params when succes get filter tags (#dua)" do
+      get "/properties",
+          params:  {q: "#lima"},
+          headers: {'Authorization'  => @user.authentication_token,
+                    'Accept-Version' => 'v1'}
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['data']['properties'].size).to eq(3)
     end
 
     it "should returns 200 with valid params when succes get filter sort_by_published ASC first < last " do

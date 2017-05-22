@@ -151,6 +151,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
         tags.extract # extract tags from text ["#satu", "#dua"]
         if tags.results.present?
           properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any(tags.results).pluck(:id)).distinct(:taggable_id)
+          properties = properties.map { |p| p.taggable }
         else
           query      = "%#{params.q}%"
           properties = properties.includes(:user).where("(users.name LIKE ? )  OR (description LIKE ?) OR (CAST ( price AS varchar ) LIKE ?)", query, query, query).references(:users)

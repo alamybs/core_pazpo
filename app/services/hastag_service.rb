@@ -37,7 +37,7 @@ class HastagService
 
   def extract
     if self.is_string
-      @results = @params.scan(/(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/).map{|tag| tag.remove("#")}.flatten
+      @results = @params.scan(/(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/).flatten.map{|tag| tag.remove("#")}.flatten
       true
     else
       @errors << "Can't format Hastag to array of string. Source must be Text type!"
