@@ -3,8 +3,14 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Chats", type: :request do
   describe "[POST] Endpoint /private" do
     before :each do
-      @user     = FactoryGirl.create(:user)
-      @user2    = FactoryGirl.create(:user_2)
+      @user  = FactoryGirl.create(:user)
+      @user2 = FactoryGirl.create(:user_2)
+      @user3 = FactoryGirl.create(:user_3)
+
+      @chat          = FactoryGirl.create(:chat, chat_type: 1)
+      @member_chat_1 = FactoryGirl.create(:member_chat, user: @user2, chat: @chat)
+      @member_chat_2 = FactoryGirl.create(:member_chat, user: @user3, chat: @chat)
+
       @property = FactoryGirl.create(:property, user_id: @user.id, tag_list: "satu, dua, tiga")
     end
     it "should returns 200 with valid params when success get channel" do
@@ -45,8 +51,18 @@ RSpec.describe "Api::V1::Chats", type: :request do
                      'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(422)
-      expect(Chat.first).to eq(nil)
       expect(JSON.parse(response.body)["error"]["errors"]).to eq(["User can't be blank"])
+    end
+    it "should returns success when channel sudah ada" do
+      params = {
+        channel: @user3.channel,
+      }
+      post "/chats/private",
+           params:  params,
+           headers: {'Authorization'  => @user2.authentication_token,
+                     'Accept-Version' => 'v1'}
+
+      expect(response.status).to eq(201)
     end
   end
   describe "[GET] Endpoint /chats" do

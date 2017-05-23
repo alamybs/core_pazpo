@@ -12,25 +12,30 @@ class API::Mobile::V1::Chats::Resources::Chats < Grape::API
     end
     post "private" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      chat           = Chat.new
-      chat.chat_type = 1
-      channels       = [me.channel]
-      channels<< params.channel
-      if chat.save
-        errors = []
-        channels.each do |c|
-          member      = chat.member_chats.new
-          member.user = User.find_by(channel: c)
-          errors << member.errors.full_messages.join(", ") unless member.save
-        end
-        if Chat.chat_types[chat.chat_type].eql?(1)
-          if chat.reload.member_chats.size < 2
-            chat.destroy
-            error!(errors.uniq.to_sentence, 422)
-          end
-        end
+      mc = me.member_chats.find_by(chat_id: User.find_by(channel: params.channel))
+      if mc.present?
+        chat = mc.chat
       else
-        error!(chat.errors.full_messages.to_sentence, 422)
+        chat           = Chat.new
+        chat.chat_type = 1
+        channels       = [me.channel]
+        channels<< params.channel
+        if chat.save
+          errors = []
+          channels.each do |c|
+            member      = chat.member_chats.new
+            member.user = User.find_by(channel: c)
+            errors << member.errors.full_messages.join(", ") unless member.save
+          end
+          if Chat.chat_types[chat.chat_type].eql?(1)
+            if chat.reload.member_chats.size < 2
+              chat.destroy
+              error!(errors.uniq.to_sentence, 422)
+            end
+          end
+        else
+          error!(chat.errors.full_messages.to_sentence, 422)
+        end
       end
       present :chat, chat, with: API::Mobile::V1::Chats::Entities::Chat
     end
