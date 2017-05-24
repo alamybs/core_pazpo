@@ -52,6 +52,22 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     end
   end
   resource "users" do
+    desc "get user" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      optional :q, type: String
+    end
+    get "/" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      users = User.all
+      users = users.where("name LIKE ?", "%#{params.q}%").order("name ASC") if params.q.present?
+      present :users, users, with: API::Mobile::V1::Users::Entities::UserInfo
+    end
+
     desc "Get current user" do
       headers "Authorization" => {
         description: "Token User",
@@ -62,7 +78,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       error!("401 Unauthorized", 401) unless authenticated_user
       present :user, @me, with: API::Mobile::V1::Users::Entities::User
     end
-    desc "Get user" do
+    desc "Detail user" do
       headers "Authorization" => {
         description: "Token User",
         required:    true
