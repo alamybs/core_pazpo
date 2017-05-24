@@ -12,6 +12,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :account_kit_id
   validates :name, :email, :phone_number, presence: true
   validates :account_kit_id, presence: true, on: :create
+  validates :player_id, presence: true, on: :create
   before_create :set_channel
 
   enum role: {'Property Agen': 1, 'Independent Agent': 2}

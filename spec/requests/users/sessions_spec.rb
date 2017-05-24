@@ -29,6 +29,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         email:              "alam@pazpo.id",
         role:               1,
         authorization_code: "authorizationcode",
+        player_id:          "player_id1234567890",
         picture:            Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/avatar.jpg'))),
       }
       post "/sessions/sign_up",

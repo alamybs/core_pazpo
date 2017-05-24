@@ -5,6 +5,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     params do
       optional :picture, :type => Rack::Multipart::UploadedFile
       requires :name, type: String
+      requires :player_id, type: String
       requires :email, allow_blank: false, regexp: /.+@.+/
       requires :authorization_code, type: String
       requires :role, type: Integer, default: 1, values: [1, 2], desc: '{1: Property Agent, 2: Independent Agen}'
@@ -18,6 +19,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
         user.phone_number   = account_kit.user["phone"]["number"]
         user.email          = params.email
         user.role           = params.role
+        user.player_id      = params.player_id
         user.picture        = params.picture if params.picture.present?
         user.account_kit_id = account_kit.user["id"]
         unless user.save
@@ -84,9 +86,22 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     end
     put "" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      me.name           = params.name
-      me.email          = params.email
-      me.picture        = params.picture if params.picture.present?
+      me.name    = params.name
+      me.email   = params.email
+      me.picture = params.picture if params.picture.present?
+      unless me.save
+        error!(me.errors.full_messages.join(", "), 422)
+      end
+      present :user, me, with: API::Mobile::V1::Users::Entities::User
+    end
+
+    desc "Update player id"
+    params do
+      requires :player_id, type: String
+    end
+    put "player_id" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      me.player_id    = params.player_id
       unless me.save
         error!(me.errors.full_messages.join(", "), 422)
       end
