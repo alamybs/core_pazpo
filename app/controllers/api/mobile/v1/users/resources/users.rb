@@ -64,7 +64,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     get "/" do
       error!("401 Unauthorized", 401) unless authenticated_user
       users = User.all
-      users = users.where("name LIKE ?", "%#{params.q}%").order("name ASC") if params.q.present?
+      users = users.where("LOWER(name) LIKE ?", "%#{params.q.downcase}%").order("name ASC") if params.q.present?
       present :users, users, with: API::Mobile::V1::Users::Entities::UserInfo
     end
 
