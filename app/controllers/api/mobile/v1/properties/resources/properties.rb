@@ -44,7 +44,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       error!("401 Unauthorized", 401) unless authenticated_user
       property = me.properties.find_by(id: params.id)
       error!("Can't find property by id : #{params.id}", 401) unless property
-      property.updated_at = Time.zone.now
+      property.created_at = Time.zone.now
       property.save(validate: false)
       present :property, property, with: API::Mobile::V1::Properties::Entities::Property
     end
