@@ -31,6 +31,24 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       present :property, property, with: API::Mobile::V1::Properties::Entities::Property
     end
 
+    desc "Sundul Property" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
+    params do
+      requires :id, type: String
+    end
+    put "up" do
+      error!("401 Unauthorized", 401) unless authenticated_user
+      property = me.properties.find_by(id: params.id)
+      error!("Can't find property by id : #{params.id}", 401) unless property
+      property.updated_at = Time.zone.now
+      property.save(validate: false)
+      present :property, property, with: API::Mobile::V1::Properties::Entities::Property
+    end
+
     desc "Update Property" do
       headers "Authorization" => {
         description: "Token User",
@@ -151,7 +169,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
         tags.extract # extract tags from text ["#satu", "#dua"]
         if tags.results.present?
           properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any(tags.results).pluck(:id)).distinct(:taggable_id)
-          properties = properties.map { |p| p.taggable }
+          properties = properties.map {|p| p.taggable}
         else
           query      = "%#{params.q}%"
           properties = properties.includes(:user).where("(users.name LIKE ? )  OR (description LIKE ?) OR (CAST ( price AS varchar ) LIKE ?)", query, query, query).references(:users)
