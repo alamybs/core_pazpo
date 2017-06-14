@@ -89,7 +89,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     end
     get "current" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      properties = me.properties
+      properties = me.properties.order("created_at DESC")
       present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
     end
 
@@ -106,7 +106,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       error!("401 Unauthorized", 401) unless authenticated_user
       user = User.find_by(id: params.user_id)
       error!("Can't find user by id : #{params.user_id}", 401) unless user
-      properties = user.properties
+      properties = user.properties.order("created_at DESC")
       present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
     end
 
