@@ -87,10 +87,11 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
         required:    true
       }
     end
+    paginate per_page: 100, max_per_page: 100
     get "current" do
       error!("401 Unauthorized", 401) unless authenticated_user
       properties = me.properties.order("created_at DESC")
-      present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
+      present :properties, paginate(properties), with: API::Mobile::V1::Properties::Entities::Property
     end
 
     desc "Get Properties by user_id" do
@@ -160,9 +161,10 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       optional :sort_by_price, type: String, values: ["ASC", "DESC"], desc: '{ mahal -> murah: DESC, murah -> mahal: ASC}'
       optional :q, type: String, desc: 'user name, property description or property price or #jogja #pazpo'
     end
+    paginate per_page: 100, max_per_page: 100
     get "" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      properties = Property.all
+      properties = Property.where(id: me.me_and_followings.map{|u| u.properties}.flatten.pluck(:id))
       if params.q.present?
         tags = HastagService.new(params.q)
         tags.to_string
@@ -182,7 +184,7 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
       if params.sort_by_price.present?
         properties = properties.reorder("price #{params.sort_by_price}")
       end
-      present :properties, properties, with: API::Mobile::V1::Properties::Entities::Property
+      present :properties, paginate(properties), with: API::Mobile::V1::Properties::Entities::Property
     end
 
   end

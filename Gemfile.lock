@@ -43,6 +43,7 @@ GEM
       activerecord (>= 4.0)
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
+    api-pagination (4.6.3)
     arel (7.1.4)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -260,6 +261,18 @@ GEM
     inflecto (0.0.2)
     ipaddress (0.8.3)
     json (1.8.6)
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-core (1.0.1)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -397,6 +410,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 4.0)
+  api-pagination
   bcrypt (~> 3.1.7)
   byebug
   carrierwave
@@ -411,6 +425,7 @@ DEPENDENCIES
   grape-swagger-rails
   guard-rspec
   hashie-forbidden_attributes
+  kaminari
   listen (~> 3.0.5)
   mini_magick
   pg (~> 0.18)

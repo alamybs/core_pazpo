@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       @user_2 = FactoryGirl.create(:user_2)
       @user_3 = FactoryGirl.create(:user_3)
 
-      @follow = FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
+      FactoryGirl.create(:follow, user_id: @user.id, follow_id: @user_2.id)
 
       @property   = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 5.minutes, tag_list: "satu,dua,tiga,lima")
       @property_2 = FactoryGirl.create(:property, user_id: @user.id, description: 'Description 2', created_at: Time.now - 4.minutes, tag_list: "satu,dua,tiga")

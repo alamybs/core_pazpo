@@ -27,6 +27,10 @@ class User < ApplicationRecord
     User.where(id: get_users.pluck(:follow_id))
   end
 
+  def me_and_followings
+    User.where(id: get_users.pluck(:follow_id)+[self.id])
+  end
+
   def info
     {
       total:{

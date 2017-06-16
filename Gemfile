@@ -76,3 +76,7 @@ gem 'carrierwave'
 
 # tags
 gem 'acts-as-taggable-on', '~> 4.0'
+
+# pagination
+gem 'api-pagination'
+gem 'kaminari'
