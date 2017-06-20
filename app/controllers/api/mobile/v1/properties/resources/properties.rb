@@ -158,13 +158,17 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
     end
     params do
       optional :sort_by_published, type: String, values: ["ASC", "DESC"], desc: '{ baru -> lama: DESC, lama -> baru: ASC}'
+      optional :page_type, type: String, default: "Jelajah", values: ["Berita", "Jelajah"], desc: 'type page'
       optional :sort_by_price, type: String, values: ["ASC", "DESC"], desc: '{ mahal -> murah: DESC, murah -> mahal: ASC}'
       optional :q, type: String, desc: 'user name, property description or property price or #jogja #pazpo'
     end
     paginate per_page: 100, max_per_page: 100
     get "" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      properties = Property.where(id: me.me_and_followings.map{|u| u.properties}.flatten.pluck(:id))
+      properties = Property.all
+      if params.page_type.downcase.eql?("berita")
+        properties = properties.where(id: me.me_and_followings.map {|u| u.properties}.flatten.pluck(:id))
+      end
       if params.q.present?
         tags = HastagService.new(params.q)
         tags.to_string
