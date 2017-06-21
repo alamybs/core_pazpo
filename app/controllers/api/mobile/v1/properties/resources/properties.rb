@@ -177,16 +177,16 @@ class API::Mobile::V1::Properties::Resources::Properties < Grape::API
           properties = ActsAsTaggableOn::Tagging.where(taggable_type: "Property", tag_id: ActsAsTaggableOn::Tag.named_like_any(tags.results).pluck(:id)).distinct(:taggable_id)
           properties = properties.map {|p| p.taggable}
         else
-          query      = "%#{params.q}%"
-          properties = properties.includes(:user).where("(users.name LIKE ? )  OR (description LIKE ?) OR (CAST ( price AS varchar ) LIKE ?)", query, query, query).references(:users)
+          query      = "%#{params.q}%".downcase
+          properties = properties.includes(:user).where("(LOWER(users.name) LIKE ? )  OR (LOWER(description) LIKE ?) OR (CAST ( price AS varchar ) LIKE ?)", query, query, query).references(:users)
         end
       end
       if params.sort_by_published.present?
-        properties = properties.reorder("created_at #{params.sort_by_published}")
+        properties = properties.reorder("properties.created_at #{params.sort_by_published}")
       end
 
       if params.sort_by_price.present?
-        properties = properties.reorder("price #{params.sort_by_price}")
+        properties = properties.reorder("properties.price #{params.sort_by_price}")
       end
       present :properties, paginate(properties), with: API::Mobile::V1::Properties::Entities::Property
     end

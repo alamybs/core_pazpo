@@ -146,7 +146,7 @@ RSpec.describe "Api::V1::Properties", type: :request do
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
     end
-    it "should returns 200 with valid params when succes get filter tags (#dua)" do
+    it "should returns 200 with valid params when succes get filter tags (#lima)" do
       get "/properties",
           params:  {q: "#lima"},
           headers: {'Authorization'  => @user.authentication_token,
@@ -169,12 +169,12 @@ RSpec.describe "Api::V1::Properties", type: :request do
 
     it "should returns 200 with valid params when succes get filter sort_by_published DESC first > last " do
       get "/properties",
-          params:  {sort_by_published: "DESC"},
+          params:  {q: "Bima", sort_by_published: "DESC"},
           headers: {'Authorization'  => @user.authentication_token,
                     'Accept-Version' => 'v1'}
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)['data']['properties'].size).to eq(5)
+      expect(JSON.parse(response.body)['data']['properties'].size).to eq(3)
       expect(JSON.parse(response.body)['data']['properties'].first['pubished_at'].to_time.to_i).to be > JSON.parse(response.body)['data']['properties'].last['pubished_at'].to_time.to_i
     end
   end
