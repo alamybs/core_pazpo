@@ -69,7 +69,6 @@ guard :rspec, cmd: "bundle exec rspec" do
   end
 
   # api grape
-  watch(%r{^app/controllers/api/(.+)\.rb$})        { |m| "spec/requests/#{m[1]}_spec.rb" }
-  watch(%r{^app/controllers/api/(.+)\.rb$})        { |m| "spec/requests/#{m[1]}_spec.rb" }
+  watch(%r{^app/controllers/api/(.+)\.rb$})        { |m| "spec/requests/#{m[1]}/#{m[1]}_spec.rb" }
 
 end

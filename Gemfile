@@ -17,7 +17,7 @@ gem 'puma', '~> 3.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -41,6 +41,8 @@ group :development, :test do
   # bundle exec guard init rspec
   ###
   gem 'guard-rspec', require: false
+
+  gem 'webmock'
 end
 
 group :development do
@@ -66,3 +68,15 @@ gem 'grape-entity'
 gem 'rack-cors', :require => 'rack/cors'
 
 gem 'figaro'
+
+# upload images
+gem 'mini_magick'
+gem 'fog', require: 'fog/aws'
+gem 'carrierwave'
+
+# tags
+gem 'acts-as-taggable-on', '~> 4.0'
+
+# pagination
+gem 'api-pagination'
+gem 'kaminari'
