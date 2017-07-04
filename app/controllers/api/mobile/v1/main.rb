@@ -9,6 +9,7 @@ module API
           }
         end
         # mount API::Mobile::V1::HelloWorlds::Routes
+        mount API::Mobile::V1::Versions::Routes
         mount API::Mobile::V1::Users::Routes
         mount API::Mobile::V1::Properties::Routes
         mount API::Mobile::V1::Networks::Routes
