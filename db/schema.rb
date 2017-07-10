@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704024458) do
+ActiveRecord::Schema.define(version: 20170710025158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,24 @@ ActiveRecord::Schema.define(version: 20170704024458) do
     t.integer  "chat_type",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "contact_books", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "phone_number", null: false
+    t.string   "email",        null: false
+    t.string   "name",         null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["phone_number"], name: "index_contact_books_on_phone_number", unique: true, using: :btree
+  end
+
+  create_table "contact_relations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "user_id",         null: false
+    t.uuid     "contact_book_id", null: false
+    t.integer  "status",          null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["contact_book_id", "user_id", "status"], name: "index_c_r_on_c_b_id_and_u_id_and_s", unique: true, using: :btree
   end
 
   create_table "follows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

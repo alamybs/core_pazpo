@@ -15,6 +15,7 @@ module API
         mount API::Mobile::V1::Networks::Routes
         mount API::Mobile::V1::Hastags::Routes
         mount API::Mobile::V1::Chats::Routes
+        mount API::Mobile::V1::ContactBooks::Routes
 
         # swagger settings
         options = {version: "v1"}
