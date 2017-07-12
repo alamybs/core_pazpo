@@ -1,16 +1,17 @@
 class ContactBook < ApplicationRecord
   has_many :contact_relations
   validates :phone_number, presence: true
+  validates :phone_number, uniqueness: true
 
   validates :name, presence: true
   validates :name, format: {
     with:    /\A[a-zA-Z\s]+\z/,
     message: "Bukan nama sebenarnya!"}
 
-  validates :email, uniqueness: true
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, length: {maximum: 255},
-            format:           {with: VALID_EMAIL_REGEX}
+  # validates :email, uniqueness: true
+  # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  # validates :email, presence: true, length: {maximum: 255},
+  #           format:           {with: VALID_EMAIL_REGEX}
 
   def self.build_contact params
     contact_book = params[:contact_book]

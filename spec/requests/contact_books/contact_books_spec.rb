@@ -65,7 +65,7 @@ RSpec.describe "Api::V1::ContactBooks", type: :request do
                       },
                       {
                         name:         "dua",
-                        email:        "dua@pazpo.id",
+                        email:        "",
                         phone_number: "+6285643736456",
                       },
                       {
