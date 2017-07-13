@@ -36,6 +36,14 @@ RSpec.describe "Api::V1::ContactBooks", type: :request do
            params:  params,
            headers: {'Authorization'  => @user.authentication_token,
                      'Accept-Version' => 'v1'}
+      post "/contact_books/",
+           params:  params,
+           headers: {'Authorization'  => @user.authentication_token,
+                     'Accept-Version' => 'v1'}
+      post "/contact_books/",
+           params:  params,
+           headers: {'Authorization'  => @user.authentication_token,
+                     'Accept-Version' => 'v1'}
       cr = ContactRelation.all
       cb = ContactBook.all
       expect(response.status).to eq(201)
