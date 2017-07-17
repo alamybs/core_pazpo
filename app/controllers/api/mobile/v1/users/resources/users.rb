@@ -94,7 +94,12 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       present :user, user, with: API::Mobile::V1::Users::Entities::UserInfo
     end
 
-    desc "Update users"
+    desc "Update users" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
     params do
       optional :picture, type: File
       requires :name, type: String
