@@ -116,13 +116,18 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
       present :user, me, with: API::Mobile::V1::Users::Entities::User
     end
 
-    desc "Update player id"
+    desc "Update player id" do
+      headers "Authorization" => {
+        description: "Token User",
+        required:    true
+      }
+    end
     params do
       requires :player_id, type: String
     end
     put "player_id" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      me.player_id    = params.player_id
+      me.player_id = params.player_id
       unless me.save
         error!(me.errors.full_messages.join(", "), 422)
       end
