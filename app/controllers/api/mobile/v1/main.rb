@@ -8,7 +8,7 @@ module API
             logger: Logger.new(STDERR)
           }
         end
-        # mount API::Mobile::V1::HelloWorlds::Routes
+        mount API::Mobile::V1::HelloWorlds::Routes
         mount API::Mobile::V1::Versions::Routes
         mount API::Mobile::V1::Users::Routes
         mount API::Mobile::V1::Properties::Routes

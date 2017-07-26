@@ -25,6 +25,22 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
         unless user.save
           error!(user.errors.full_messages.join(", "), 422)
         end
+        # notif friend in contact
+        cb = ContactBook.find_by(phone_number: user.phone_number)
+        if cb.present?
+          player_ids = []
+          cb.contact_relations.where(status: :owner).each do |cr|
+            player_ids << cr.user.player_id unless user.player_id.eql?(cr.user.player_id)
+          end
+          n  = Notifier.new({message: "Teman anda #{user.name} baru saja bergabung di PAZPO", data: {
+            user: {
+              id:      user.id,
+              name:    user.name,
+            }
+          }, recipient:               player_ids, event: "friend_join"})
+          os = OneSignal.new({notifier: n})
+          os.push
+        end
         messages = "Success Create user."
       else
         messages = account_kit.errors
@@ -117,7 +133,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
     end
     put "player_id" do
       error!("401 Unauthorized", 401) unless authenticated_user
-      me.player_id    = params.player_id
+      me.player_id = params.player_id
       unless me.save
         error!(me.errors.full_messages.join(", "), 422)
       end

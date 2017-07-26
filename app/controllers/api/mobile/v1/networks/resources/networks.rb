@@ -1,7 +1,6 @@
 class API::Mobile::V1::Networks::Resources::Networks < Grape::API
   include API::Mobile::V1::Config
   resource "networks" do
-
     desc "Follow user by user_id" do
       headers "Authorization" => {
         description: "Token User",
@@ -14,10 +13,25 @@ class API::Mobile::V1::Networks::Resources::Networks < Grape::API
     post "follow" do
       error!("401 Unauthorized", 401) unless authenticated_user
       follow = me.follows.new
-      error!("Can't find user by id : #{params.user_id}", 401) unless follow
+      user   = User.find_by(id: params.user_id)
+      error!("Can't find user by id : #{params.user_id}", 401) unless user
       follow.follow_id = params.user_id
       if follow.save
         messages = "Success follow user with id : #{ params.user_id}."
+
+        # notif to user target
+        n = Notifier.new({message: "#{user.name} baru saja mengikuti kamu. Ikuti kembali!", data: {
+          user:     {
+            id:      me.id,
+            name:    me.name,
+          },
+          follower: {
+            id:      user.id,
+            name:    user.name,
+          }
+        }, recipient:              [user.player_id], event: "follower_info"})
+        os = OneSignal.new({notifier: n})
+        os.push
       else
         messages = "Fail follow user with id : #{ params.user_id}."
         error!(follow.errors.full_messages.join(", "), 422)

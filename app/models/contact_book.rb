@@ -1,5 +1,6 @@
 class ContactBook < ApplicationRecord
   has_many :contact_relations
+  has_many :users, through: :contact_relations
   validates :phone_number, presence: true
   validates :phone_number, uniqueness: true
 
