@@ -36,6 +36,7 @@ class API::Mobile::V1::Users::Resources::Users < Grape::API
             user: {
               id:      user.id,
               name:    user.name,
+              picture: user.picture
             }
           }, recipient:               player_ids, event: "friend_join"})
           os = OneSignal.new({notifier: n})

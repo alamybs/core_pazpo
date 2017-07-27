@@ -8,12 +8,13 @@ class API::Mobile::V1::HelloWorlds::Resources::HelloWorlds < Grape::API
     get "notification" do
       response = []
       # notif to user target
-      n = Notifier.new({message: "Alam YBS baru saja mengikuti kamu. Ikuti kembali!", data: {
+      n  = Notifier.new({message: "Alam YBS baru saja mengikuti kamu. Ikuti kembali!", data: {
         user: {
-          id:      "dummy-2312312-321312-312312",
-          name:    "Alam YBS",
+          id:   "dummy-2312312-321312-312312",
+          name: "Alam YBS",
+          picture: User.last.picture,
         }
-      }, recipient:              [params.player_id], event: "follower_info"})
+      }, recipient:               [params.player_id], event: "follower_info"})
       os = OneSignal.new({notifier: n})
       os.push
       response << os.response
@@ -23,8 +24,9 @@ class API::Mobile::V1::HelloWorlds::Resources::HelloWorlds < Grape::API
         user: {
           id:      "dummy-2312312-321312-312312",
           name:    "Alam YBS",
+          picture: User.last.picture,
         }
-      }, recipient:              [params.player_id], event: "friend_join"})
+      }, recipient:               [params.player_id], event: "friend_join"})
       os = OneSignal.new({notifier: n})
       os.push
       present response

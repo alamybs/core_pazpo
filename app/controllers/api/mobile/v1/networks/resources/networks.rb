@@ -20,16 +20,17 @@ class API::Mobile::V1::Networks::Resources::Networks < Grape::API
         messages = "Success follow user with id : #{ params.user_id}."
 
         # notif to user target
-        n = Notifier.new({message: "#{user.name} baru saja mengikuti kamu. Ikuti kembali!", data: {
+        n  = Notifier.new({message: "#{user.name} baru saja mengikuti kamu. Ikuti kembali!", data: {
           user:     {
-            id:      me.id,
-            name:    me.name,
+            id:   me.id,
+            name: me.name,
           },
           follower: {
             id:      user.id,
             name:    user.name,
+            picture: user.picture,
           }
-        }, recipient:              [user.player_id], event: "follower_info"})
+        }, recipient:               [user.player_id], event: "follower_info"})
         os = OneSignal.new({notifier: n})
         os.push
       else
